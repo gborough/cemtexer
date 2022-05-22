@@ -1,0 +1,26 @@
+[package]
+name = "cemtexer"
+version = "0.1.0"
+edition = "2021"
+authors = ["Geoffrey Borough <geoffrey.borough@outlook.com>"]
+readme = "README.md"
+license = "MIT"
+description = """
+An utility for generating and validating Australian Banking Association
+Cemtex file format
+"""
+keywords = ["aba", "csv", "cemtex", "parser"]
+categories = ["command-line-utilities", "encoding", "parser-implementations"]
+publish = ["crates-io"]
+
+[dependencies]
+nom = "7.1.1"
+csv = "1.1.6"
+rand = "0.8.5"
+regex = "1.5.5"
+thiserror = "1.0.30"
+lazy_static = "1.4.0"
+serde = { version = "1.0.136", features = ["derive"] }
+config = { version = "0.13.1", features = ["toml"] }
+clap = { version = "3.1.12", features = ["derive"] }
+time = { version = "0.3.9", features = ["formatting", "macros", "parsing"] }

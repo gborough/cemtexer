@@ -1,0 +1,26 @@
+###Insert the 3 charater of your bank name###
+bank_name = ""
+
+###Insert your company name, must not exceed 26 charaters###
+user_name = ""
+
+###Insert your APCA number, must not exceed 6 digits###
+apca_number = ""
+
+###Insert the description for this file, must not exceed 12 charaters###
+file_description = ""
+
+###Insert a valid settlement date, must be in the format of DDMMYY###
+settle_date = ""
+
+###Insert your settlement account BSB, must be in the format of xxx-xxx where x are digits###
+trace_bsb = ""
+
+###Insert your settlement account number, must not exceed 9 digits###
+trace_account_number = "" 
+
+###Insert your settlement account name, must not exceed 16 charaters###
+trace_account_name = ""
+
+###Ignore for now, reserver for future releases###
+###merge_multiple_payments = ""###
