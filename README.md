@@ -21,6 +21,7 @@ unique covenant regarding performance and memory safety.
 of Cemtex file in a scripted fashion and targets individual with an easy to use
 UI in the upcoming releases.
 
+[![CircleCI](https://circleci.com/gh/gborough/cemtexer/tree/main.svg?style=svg)](https://circleci.com/gh/gborough/cemtexer/tree/main)
 [![Crates.io][crates-badge]][crates-url]
 [![MIT licensed][mit-badge]][mit-url]
 
