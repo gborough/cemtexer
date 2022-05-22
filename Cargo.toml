@@ -5,6 +5,9 @@ edition = "2021"
 authors = ["Geoffrey Borough <geoffrey.borough@outlook.com>"]
 readme = "README.md"
 license = "MIT"
+homepage = "https://github.com/gborough/cemtexer"
+repository = "https://github.com/gborough/cemtexer"
+documentation = "https://docs.rs/cemtexer"
 description = """
 An utility for generating and validating Australian Banking Association
 Cemtex file format
