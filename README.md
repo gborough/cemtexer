@@ -27,7 +27,7 @@ UI in the upcoming releases.
 [crates-badge]: https://img.shields.io/crates/v/tokio.svg
 [crates-url]: https://crates.io/crates/cemtexer
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-badge]: https://github.com/gborough/blob/main/LICENSE
+[mit-badge]: https://github.com/gborough/cemtexer/blob/main/LICENSE
 
 ## How to Use
 
