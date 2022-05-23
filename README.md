@@ -113,6 +113,9 @@ Example of optional fields:
 
 ## Notes
 
+* Currently it's targeting primarily x86_64 linux platform, though users could download the
+source code and compile on their own targets other than x86_64.
+
 * APCA number validation is not supporte in the current release due to lack of data source,
 please let me know if there is a reliable data source that I can use.
 
@@ -149,7 +152,7 @@ target for easy distribution and fully self contained. Planned, in progress.
 
 This project is licensed under the [MIT license].
 
-[MIT license]: https://
+[MIT license]: https://github.com/gborough/cemtexer/blob/main/LICENSE
 
 ## Contribution
 
