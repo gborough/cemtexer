@@ -10,7 +10,7 @@ jobs:
       - run: cargo test && cargo build --release
       - run: mkdir release && cp target/release/cemtexer release/
       - run: curl -LO https://github.com/tcnksm/ghr/releases/download/v0.14.0/ghr_v0.14.0_linux_amd64.tar.gz && tar -xvf ghr_v0.14.0_linux_amd64.tar.gz
-      - run: ./ghr_v0.14.0_linux_amd64/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v0.1.0 release/
+      - run: ./ghr_v0.14.0_linux_amd64/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v0.1.1 release/
 workflows:
   version: 2
   build:

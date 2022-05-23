@@ -8,7 +8,7 @@ use crate::csv::*;
 /// Command line options
 #[derive(Parser)]
 #[clap(author = "Author: Geoffrey Borough<Geoffrey.Borough@outlook.com>")]
-#[clap(version = "0.1.0")]
+#[clap(version = "0.1.1")]
 #[clap(about = "Utility to convert CSV file to Cemtex ABA file and validate Cemtex ABA file format", long_about = None)]
 #[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 pub struct Cli {
