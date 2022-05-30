@@ -94,7 +94,7 @@ pub fn validate_generic_filler_str(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -112,7 +112,7 @@ pub fn validate_filler_str_line_counted(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -127,7 +127,7 @@ pub fn validate_user_name(i: String, fill_type: ValidationType) -> Result<(), Li
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -140,7 +140,7 @@ pub fn validate_self_name(i: String, fill_type: ValidationType) -> Result<(), Li
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -154,7 +154,7 @@ pub fn validate_apca_ident(i: String, fill_type: ValidationType) -> Result<(), L
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -167,7 +167,7 @@ pub fn validate_file_entry(i: String, fill_type: ValidationType) -> Result<(), L
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -180,7 +180,7 @@ pub fn validate_date(i: String, fill_type: ValidationType) -> Result<(), LinePar
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -203,7 +203,7 @@ pub fn validate_bsb_client(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -221,7 +221,7 @@ pub fn validate_dest_acct(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -238,7 +238,7 @@ pub fn validate_indicator(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -255,7 +255,7 @@ pub fn validate_trans_code(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -273,7 +273,7 @@ pub fn validate_amount(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -290,7 +290,7 @@ pub fn validate_client_name(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -307,7 +307,7 @@ pub fn validate_lodge_ref(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -327,7 +327,7 @@ pub fn validate_bsb_trace(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -345,7 +345,7 @@ pub fn validate_src_acct(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -362,7 +362,7 @@ pub fn validate_remitter(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
@@ -379,7 +379,7 @@ pub fn validate_tax_withhold(
                 Ok(())
             }
         }
-        _ => unreachable!(),
+        _ => Ok(()),
     }
 }
 
