@@ -1,6 +1,6 @@
 //! Validation utility function for various .aba data fields
 use lazy_static::lazy_static;
-use nom::character::{is_alphabetic, is_digit};
+use nom::character::is_digit;
 use regex::Regex;
 use std::ops::Sub;
 use time::{format_description as Fd, Date as Td};

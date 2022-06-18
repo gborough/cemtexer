@@ -1,7 +1,3 @@
-//! Cemtexer is a utility for converting CSV file to Cemtex .aba file
-//!
-//! Also functions as a parser validator for ABA file
-
 #![allow(unused_imports)]
 
 mod blocks;

@@ -1,5 +1,4 @@
 //! Error types used for .aba file validation
-use std::fmt::Display;
 use thiserror::Error;
 
 /// Pre-filled error messages for line counts and data fields which are fixed in the blocks structures

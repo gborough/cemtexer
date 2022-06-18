@@ -3,8 +3,8 @@ use config::{Config, File as ConfFile};
 use csv::ReaderBuilder;
 use serde::Deserialize;
 use std::{
-    alloc::System, collections::HashMap, convert::AsRef, error::Error, ffi::OsStr, fmt::Display,
-    fs::File, path::Path, process::exit,
+    collections::HashMap, convert::AsRef, error::Error, ffi::OsStr, fmt::Display, path::Path,
+    process::exit,
 };
 
 use crate::csv::*;

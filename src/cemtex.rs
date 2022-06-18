@@ -107,7 +107,8 @@ impl CemtexInner {
         }
 
         if error_count.eq(&0u32) {
-            println!("File content validation successful!\nno errors detected and no report will be generated :)");
+            println!("File content validation successful!");
+            buf.write_fmt(format_args!("{}", "No errors detected")).unwrap();
         } else {
             println!(
                 "Some errors detected and a report is generated at location <{}>:",

@@ -1,6 +1,4 @@
-use std::{
-    error::Error, fmt::Display, fmt::Write as fw, fs::File, io::Write, path::Path, process::exit,
-};
+use std::{error::Error, fmt::Write as fw, fs::File, io::Write, path::Path, process::exit};
 
 use crate::blocks::*;
 use crate::cemtex::*;

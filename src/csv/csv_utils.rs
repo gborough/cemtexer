@@ -4,7 +4,7 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use serde::{Deserialize, Deserializer};
-use std::{ops::Sub, process::exit};
+use std::ops::Sub;
 
 use crate::parser_utils::*;
 use crate::types::*;
