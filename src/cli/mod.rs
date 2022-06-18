@@ -1,3 +1,4 @@
+//! Module for command line interface functions
 mod cli_opts;
 mod cli_utils;
 
