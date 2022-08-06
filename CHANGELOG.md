@@ -1,1 +1,3 @@
 ## ✨ cemtexer **0.1.0** *(2022-05-22)*
+## ✨ cemtexer **0.1.3** *(2022-08-06)*
+  Adding nix build script

@@ -2,3 +2,5 @@
 /.vscode/
 **/*.rs.bk
 Cargo.lock
+/result
+/.direnv

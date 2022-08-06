@@ -33,7 +33,7 @@ UI in the upcoming releases.
 ## How to Use
 
 Download the latest release from:
-https://github.com/gborough/cemtexer/releases/download/v0.1.2/cemtexer
+https://github.com/gborough/cemtexer/releases/download/v0.1.3/cemtexer
 
 The command line interface currently features four functions, type cemtexer -h
 for command line options
@@ -134,12 +134,6 @@ verbatim. Overall we assume that the accounting software would output the correc
 
 * Due to Cemtex using non-compliant date format(DDMMYY), the leap year validation will only
 run up to year 9999 A.D.
-
-## TODOS
-
-* Add Nix build files. In progress.
-
-* Add cross compile script. In progress.
 
 ## Future Releases
 

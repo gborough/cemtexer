@@ -1,14 +1,10 @@
 //! Command line options and associated functions
 use clap::{AppSettings, Args, Parser, Subcommand};
 
-// use crate::blocks::*;
-// use crate::cemtex::*;
-// use crate::csv::*;
-
 /// Command line options
 #[derive(Parser)]
 #[clap(author = "Author: Geoffrey Borough<Geoffrey.Borough@outlook.com>")]
-#[clap(version = "0.1.2")]
+#[clap(version)]
 #[clap(about = "Utility to convert CSV file to Cemtex ABA file and validate Cemtex ABA file format", long_about = None)]
 #[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 pub struct Cli {
