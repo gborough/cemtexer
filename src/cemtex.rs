@@ -1,31 +1,35 @@
 //! Various struct for reading .aba file format
 use std::{
-    fmt::Display, fs::File, io::BufRead, io::BufReader, io::Write, path::Path, process::exit,
+    fmt::Display, path::Path, process::exit,
 };
+use tokio::fs::File;
+use tokio::io::BufReader;
+use tokio::io::AsyncBufReadExt;
+use tokio::io::AsyncWriteExt;
 
 use crate::blocks::*;
 use crate::errors::*;
 
 /// Cemtex representation
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct Cemtex {
     pub inner: CemtexInner,
 }
 
 impl Cemtex {
-    pub fn new(path: impl AsRef<Path>) -> Self {
+    pub async fn new(path: impl AsRef<Path>) -> Cemtex {
         Self {
-            inner: CemtexInner::new(path),
+            inner: CemtexInner::new(path).await,
         }
     }
 
-    pub fn validate(&self, path: impl AsRef<Path> + Display) {
+    pub async fn validate(&self, path: impl AsRef<Path> + Display) {
         let _ = CemtexInner::validate_inner(&self.inner, path);
     }
 }
 
 /// Inner presentation for Cemtex
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct CemtexInner {
     pub descriptive: String,
     pub detail: Vec<String>,
@@ -34,8 +38,8 @@ pub struct CemtexInner {
 }
 
 impl CemtexInner {
-    pub fn new(path: impl AsRef<Path>) -> Self {
-        let file = match File::open(path) {
+    pub async fn new(path: impl AsRef<Path>) -> CemtexInner {
+        let file = match File::open(path).await {
             Ok(file) => file,
             Err(_) => {
                 println!("Cannot locate file, program aborting");
@@ -47,7 +51,7 @@ impl CemtexInner {
         let mut line_count: u32 = 0u32;
         let mut err_count: u32 = 0u32;
         let mut err: Vec<String> = Vec::new();
-        let entries = read_buf(buf, &mut line_count, &mut err_count, &mut err);
+        let entries = read_buf(buf, &mut line_count, &mut err_count, &mut err).await;
 
         if line_count.lt(&3u32) {
             println!("Sorry: The total number of line entries should be at least 3 line in order to form a valid .aba file, instead it has `{0}` lines. Program aborted", line_count);
@@ -70,11 +74,11 @@ impl CemtexInner {
         }
     }
 
-    pub fn validate_inner(&self, path: impl AsRef<Path> + Display) -> Result<(), LineParseError> {
+    pub async fn validate_inner(&self, path: impl AsRef<Path> + Display) -> Result<(), LineParseError> {
         let mut detail_line_count = 1u32;
         let mut error_count = 0u32;
 
-        let mut buf = match File::create(&path) {
+        let mut buf = match File::create(&path).await {
             Ok(buf) => buf,
             Err(_) => {
                 println!("Unable to create file at this location. Program aborted");
@@ -83,32 +87,32 @@ impl CemtexInner {
         };
 
         let (_, descriptive) = DescriptiveBlock::deserialise(&self.descriptive).unwrap();
-        let desc_res = DescriptiveBlock::validate(&descriptive)?;
+        let desc_res = DescriptiveBlock::validate(&descriptive).await?;
         if !desc_res.is_empty() {
             error_count += 1;
-            buf.write_all(desc_res.as_bytes()).unwrap();
+            buf.write_all(desc_res.as_bytes()).await.unwrap();
         }
 
         for line in self.detail.iter() {
             detail_line_count += 1u32;
-            let (_, total) = DetailBlock::deserialise(line).unwrap();
-            let detail_res = DetailBlock::validate(&total, &detail_line_count)?;
+            let (_, detail_total) = DetailBlock::deserialise(line).unwrap();
+            let detail_res = DetailBlock::validate(&detail_total, &detail_line_count).await?;
             if !detail_res.is_empty() {
                 error_count += 1;
-                buf.write_all(detail_res.as_bytes()).unwrap();
+                buf.write_all(detail_res.as_bytes()).await.unwrap();
             }
         }
 
-        let (_, total) = TotalBlock::deserialise(&self.total).unwrap();
-        let total_res = TotalBlock::validate(&total, &(self.line_count - 2u32))?;
+        let (_, block_total) = TotalBlock::deserialise(&self.total).unwrap();
+        let total_res = TotalBlock::validate(&block_total, &(self.line_count - 2u32)).await?;
         if !total_res.is_empty() {
             error_count += 1;
-            buf.write_all(total_res.as_bytes()).unwrap();
+            buf.write_all(total_res.as_bytes()).await.unwrap();
         }
 
         if error_count.eq(&0u32) {
             println!("File content validation successful!");
-            buf.write_fmt(format_args!("{}", "No errors detected")).unwrap();
+            buf.write(b"No errors detected").await.unwrap();
         } else {
             println!(
                 "Some errors detected and a report is generated at location <{}>:",
@@ -120,15 +124,16 @@ impl CemtexInner {
     }
 }
 
-fn read_buf(
+async fn read_buf<'a>(
     buf: BufReader<File>,
     line_count: &mut u32,
     err_count: &mut u32,
     err: &mut Vec<String>,
 ) -> Vec<String> {
     let mut entries: Vec<String> = Vec::new();
+    let mut lines = buf.lines();
 
-    for line in buf.lines().map(|l| l.unwrap()) {
+    while let Some(line) = lines.next_line().await.unwrap() {
         *line_count += 1;
 
         if !line.len().eq(&120usize) {

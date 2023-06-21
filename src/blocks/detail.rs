@@ -40,29 +40,29 @@ impl DetailBlock {
         let (i, tax_withhold) = take(8u8)(i)?;
 
         let detail = Self {
-            record_type: record_type.to_string(),
-            bsb_number: bsb_number.to_string(),
-            dest_acct: dest_acct.to_string(),
-            indicator: indicator.to_string(),
-            trans_code: trans_code.to_string(),
-            amount: amount.to_string(),
-            client_name: client_name.to_string(),
-            lodge_ref: lodge_ref.to_string(),
-            trace_bsb: trace_bsb.to_string(),
-            src_acct: src_acct.to_string(),
-            account_name: account_name.to_string(),
-            tax_withhold: tax_withhold.to_string(),
+            record_type: record_type.to_owned(),
+            bsb_number: bsb_number.to_owned(),
+            dest_acct: dest_acct.to_owned(),
+            indicator: indicator.to_owned(),
+            trans_code: trans_code.to_owned(),
+            amount: amount.to_owned(),
+            client_name: client_name.to_owned(),
+            lodge_ref: lodge_ref.to_owned(),
+            trace_bsb: trace_bsb.to_owned(),
+            src_acct: src_acct.to_owned(),
+            account_name: account_name.to_owned(),
+            tax_withhold: tax_withhold.to_owned(),
         };
 
         Ok((i, detail))
     }
 
-    pub fn validate(&self, line_count: &u32) -> Result<String, LineParseError> {
+    pub async fn validate(&self, line_count: &u32) -> Result<String, LineParseError> {
         let mut res: String = String::new();
 
         let _res = validate_filler_str_line_counted(
             self.record_type.clone(),
-            "1".to_string(),
+            "1".to_owned(),
             ValidationType::DetailRecordTypeOne,
             line_count,
         )
@@ -189,11 +189,11 @@ impl Display for DetailBlock {
 impl From<RecordWithConf> for DetailBlock {
     fn from(rec_conf: RecordWithConf) -> Self {
         Self {
-            record_type: "1".to_string(),
+            record_type: "1".to_owned(),
             bsb_number: rec_conf.rec.bsb,
             dest_acct: right_adjust(&rec_conf.rec.account_number, 9usize, FillStrategy::Blank),
-            indicator: " ".to_string(),
-            trans_code: "53".to_string(),
+            indicator: " ".to_owned(),
+            trans_code: "53".to_owned(),
             amount: right_adjust(&rec_conf.rec.amount, 10usize, FillStrategy::Zero),
             client_name: left_adjust(&rec_conf.rec.client_name, 32usize, FillStrategy::Blank),
             lodge_ref: left_adjust(&rec_conf.rec.comment, 18usize, FillStrategy::Blank),
