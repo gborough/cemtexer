@@ -1,6 +1,5 @@
 //! Detail block starts from the second line to the second last line of a valid .aba file
-use nom::bytes::complete::take;
-use nom::IResult;
+use nom::{bytes::complete::take, IResult};
 use std::{fmt::Display, fmt::Write};
 
 use crate::csv::*;

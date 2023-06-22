@@ -25,7 +25,7 @@ pub struct CsvRecord {
 }
 
 impl CsvRecord {
-    pub fn read(path: impl AsRef<Path>) -> Result<Vec<CsvRecord>, Box<dyn Error>> {
+    pub async fn read(path: impl AsRef<Path>) -> Result<Vec<CsvRecord>, Box<dyn Error>> {
         let mut rdr = match ReaderBuilder::new()
             .has_headers(false)
             .flexible(true)
@@ -70,16 +70,16 @@ pub struct SettlementSettings {
 
 impl SettlementSettings {
     pub async fn new(path: impl AsRef<Path> + AsRef<OsStr>) -> Self {
-        let settings = match Config::builder()
+        let settings =  Config::builder()
             .add_source(ConfFile::from(Path::new(&path)))
-            .build()
-        {
-            Ok(settings) => settings,
-            Err(_) => {
-                println!("Unable to open the settings file. Program Aborted");
-                exit(1);
-            }
-        };
+            .build().unwrap();
+        // {
+        //     Ok(settings) => settings,
+        //     Err(_) => {
+        //         println!("Unable to open the settings file. Program Aborted");
+        //         exit(1);
+        //     }
+        // };
 
         let settings = settings
             .try_deserialize::<HashMap<String, String>>()
@@ -219,7 +219,7 @@ impl RecordFlatten {
             bsb: rec.bsb.trim().to_owned(),
             account_number: rec.account_number.trim().to_owned(),
             client_name: rec.client_name.trim().to_owned(),
-            amount: normalise_amount(rec.amount.trim().trim_start_matches('$')).to_owned(),
+            amount: normalise_amount(rec.amount.trim().trim_start_matches('$')),
             comment: rec.comment.as_ref().unwrap().trim().to_owned(),
             tax_withhold: normalise_amount(
                 rec.tax_withhold
@@ -227,7 +227,7 @@ impl RecordFlatten {
                     .unwrap()
                     .trim()
                     .trim_start_matches('$'),
-            ).to_owned(),
+            ),
         }
     }
 }

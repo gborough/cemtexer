@@ -23,7 +23,6 @@ rand = "0.8.5"
 regex = "1.8.4"
 thiserror = "1.0.40"
 lazy_static = "1.4.0"
-async-trait = "0.1.68"
 serde = { version = "1.0.164", features = ["derive"] }
 config = { version = "0.13.3", features = ["toml"] }
 clap = { version = "4.3.5", features = ["derive"] }

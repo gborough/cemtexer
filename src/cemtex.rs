@@ -1,11 +1,9 @@
 //! Various struct for reading .aba file format
-use std::{
-    fmt::Display, path::Path, process::exit,
+use std::{fmt::Display, path::Path, process::exit};
+use tokio::{
+    fs::File,
+    io::{AsyncBufReadExt, AsyncWriteExt, BufReader},
 };
-use tokio::fs::File;
-use tokio::io::BufReader;
-use tokio::io::AsyncBufReadExt;
-use tokio::io::AsyncWriteExt;
 
 use crate::blocks::*;
 use crate::errors::*;
@@ -24,7 +22,7 @@ impl Cemtex {
     }
 
     pub async fn validate(&self, path: impl AsRef<Path> + Display) {
-        let _ = CemtexInner::validate_inner(&self.inner, path);
+        let _ = CemtexInner::validate_inner(&self.inner, path).await;
     }
 }
 
@@ -74,7 +72,10 @@ impl CemtexInner {
         }
     }
 
-    pub async fn validate_inner(&self, path: impl AsRef<Path> + Display) -> Result<(), LineParseError> {
+    pub async fn validate_inner(
+        &self,
+        path: impl AsRef<Path> + Display,
+    ) -> Result<(), LineParseError> {
         let mut detail_line_count = 1u32;
         let mut error_count = 0u32;
 
@@ -112,10 +113,10 @@ impl CemtexInner {
 
         if error_count.eq(&0u32) {
             println!("File content validation successful!");
-            buf.write(b"No errors detected").await.unwrap();
+            buf.write_all(b"No errors detected").await.unwrap();
         } else {
             println!(
-                "Some errors detected and a report is generated at location <{}>:",
+                "Some errors detected and a report is generated at location: {}",
                 &path
             );
         }

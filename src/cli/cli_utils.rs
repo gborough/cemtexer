@@ -16,6 +16,7 @@ pub async fn print_example_template() -> std::io::Result<()> {
 
 /// Subcommand to generate template to designated location
 pub async fn generate_template(path: impl AsRef<Path>) -> std::io::Result<()> {
+    let path = path.as_ref().with_extension("toml");
     let mut buf = match File::create(path).await {
         Ok(buf) => buf,
         Err(_) => {
@@ -23,7 +24,8 @@ pub async fn generate_template(path: impl AsRef<Path>) -> std::io::Result<()> {
             exit(1);
         }
     };
-    buf.write_all(include_str!("../data/example").as_bytes()).await?;
+    buf.write_all(include_str!("../data/template").as_bytes())
+        .await?;
 
     Ok(())
 }
@@ -37,7 +39,7 @@ pub async fn aba_gen(path: AbagenSub) -> std::io::Result<()> {
     let mut total = 0u32;
     let mut line_count = 0u32;
 
-    let rec = CsvRecord::read(path.csv);
+    let rec = CsvRecord::read(path.csv).await;
     let detailvec = read_settings(settle_setting, rec, &mut line_count, &mut total).await;
 
     let total_record = TotalRecord::new(line_count.to_string(), total.to_string()).await;

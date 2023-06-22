@@ -1,0 +1,43 @@
+name: Release Main
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:    
+      - main
+    tags:
+      - v*.*.*
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Check Style
+        run: |
+          cargo fmt -- --check
+
+      - name: Cargo Clippy
+        run: cargo clippy -- -D warnings
+
+      - name: Cargo Test
+        run: cargo test
+
+      - name: Cargo Build
+        run: cargo build --release
+
+      - name: Publish Artifact
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/release/cemtexer

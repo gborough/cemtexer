@@ -106,7 +106,7 @@ fn blank_fill(i: &str, size: usize) -> String {
 }
 
 pub fn normalise_amount(i: &str) -> String {
-    if i.contains(".") && RE_AMOUNT.is_match(&i) {
+    if i.contains(".") && RE_AMOUNT.is_match(i) {
         i.replace(".", "")
     } else {
         i.to_owned()
@@ -115,9 +115,7 @@ pub fn normalise_amount(i: &str) -> String {
 
 pub fn validate_csv_bank_name(i: &str, res: &mut Vec<&str>) -> bool {
     if i.is_empty() || i.len().gt(&3usize) {
-        res.push(
-            "Bank name field must be in the excat format of 3 upppercase characters",
-        );
+        res.push("Bank name field must be in the excat format of 3 upppercase characters");
         return false;
     }
 
@@ -164,8 +162,9 @@ pub fn validate_csv_settle_date(i: &str, res: &mut Vec<&str>) -> bool {
 pub fn validate_bsb(i: &str, res: &mut Vec<&str>, bsb_type: BsbType) -> bool {
     if i.is_empty() || !i.len().eq(&7usize) {
         match bsb_type {
-            BsbType::DetailBsb => res
-                .push("BSB field must be in the format of xxx-xxx where x are digits"),
+            BsbType::DetailBsb => {
+                res.push("BSB field must be in the format of xxx-xxx where x are digits")
+            }
             BsbType::DetailTraceBsb => res.push(
                 "Trace BSB code field must be in the excat format of xxx-xxx where x are digits",
             ),
@@ -187,8 +186,9 @@ pub fn validate_account_number(i: &str, res: &mut Vec<&str>, bsb_type: BsbType) 
             BsbType::DetailBsb => {
                 res.push("Account number field must not be empty and exceed 9 digits")
             }
-            BsbType::DetailTraceBsb => res.push(
-                "Trace account number field must not be empty and exceed 9 digits"),
+            BsbType::DetailTraceBsb => {
+                res.push("Trace account number field must not be empty and exceed 9 digits")
+            }
         }
         return false;
     }
@@ -216,8 +216,7 @@ pub fn validate_csv_amount(i: &str, res: &mut Vec<&str>) -> bool {
         || i.replace(".", "").len().gt(&10usize)
         || !validate_number(&i.replace(".", ""))
     {
-        res.push(
-            "Amount field must be digits and must not be empty and exceed 10 digits");
+        res.push("Amount field must be digits and must not be empty and exceed 10 digits");
         false
     } else if i.contains(".") {
         match RE_AMOUNT.is_match(i) {

@@ -14,13 +14,13 @@ file_description = "PAYROLL"
 settle_date = "300422"
 
 ###Insert your settlement account BSB, must be in the format of xxx-xxx where x are digits###
-bsb = "123-456"
+trace_bsb = "123-456"
 
 ###Insert your settlement account number, must not exceed 9 digits###
-account_number = "123456789"
+trace_account_number = "123456789"
 
 ###Insert your settlement account name, must not exceed 16 charaters###
-account_name = "MY COMPANY"
+trace_account_name = "MY COMPANY"
 
 ###Ignore for now, reserver for future releases###
 merge_multiple_payments = "N"

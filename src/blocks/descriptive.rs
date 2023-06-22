@@ -1,13 +1,12 @@
 //! Descriptive block is always the first line of a valid .aba file
-use nom::bytes::complete::take;
-use nom::IResult;
+use lazy_static::lazy_static;
+use nom::{bytes::complete::take, IResult};
 use std::{fmt::Display, fmt::Write};
 
 use crate::csv::*;
 use crate::errors::*;
 use crate::parser_utils::*;
 use crate::types::*;
-use lazy_static::lazy_static;
 
 lazy_static! {
     static ref BLANK_1: String = " ".repeat(17);

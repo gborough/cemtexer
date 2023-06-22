@@ -3,9 +3,9 @@
 //! Also functions as a parser validator for ABA file
 
 pub mod blocks;
+pub mod cemtex;
 pub mod cli;
 pub mod csv;
-pub mod cemtex;
 pub mod errors;
 pub mod helper;
 pub mod parser_utils;
