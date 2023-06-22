@@ -453,10 +453,7 @@ pub fn validate_date_format(i: &str) -> bool {
     let (_, date) = TwoDigitYears::deserialise(i).unwrap();
     let format = Fd::parse("[day][month][year]").unwrap();
 
-    match Td::parse(&date, &format) {
-        Err(_) => false,
-        Ok(_) => true,
-    }
+    Td::parse(&date, &format).is_ok()
 }
 
 pub fn validate_number(i: &str) -> bool {

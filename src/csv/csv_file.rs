@@ -25,7 +25,7 @@ pub struct CsvRecord {
 }
 
 impl CsvRecord {
-    pub fn read(path: impl AsRef<Path>) -> Result<Vec<CsvRecord>, Box<dyn Error>> {
+    pub async fn read(path: impl AsRef<Path>) -> Result<Vec<CsvRecord>, Box<dyn Error>> {
         let mut rdr = match ReaderBuilder::new()
             .has_headers(false)
             .flexible(true)
@@ -69,7 +69,7 @@ pub struct SettlementSettings {
 }
 
 impl SettlementSettings {
-    pub fn new(path: impl AsRef<Path> + AsRef<OsStr>) -> Self {
+    pub async fn new(path: impl AsRef<Path> + AsRef<OsStr>) -> Self {
         let settings = match Config::builder()
             .add_source(ConfFile::from(Path::new(&path)))
             .build()
@@ -86,7 +86,7 @@ impl SettlementSettings {
             .unwrap();
 
         let bank_name = match settings.get("bank_name") {
-            Some(bank_name) => bank_name.trim().to_string(),
+            Some(bank_name) => bank_name.trim(),
             None => {
                 println!("Cannot find value key: user_name...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -94,7 +94,7 @@ impl SettlementSettings {
         };
 
         let user_name = match settings.get("user_name") {
-            Some(user_name) => user_name.trim().to_string(),
+            Some(user_name) => user_name.trim(),
             None => {
                 println!("Cannot find value key: user_name...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -102,7 +102,7 @@ impl SettlementSettings {
         };
 
         let apca_number = match settings.get("apca_number") {
-            Some(apca_number) => apca_number.trim().to_string(),
+            Some(apca_number) => apca_number.trim(),
             None => {
                 println!("Cannot find value key: apca_number...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -110,7 +110,7 @@ impl SettlementSettings {
         };
 
         let file_description = match settings.get("file_description") {
-            Some(file_description) => file_description.trim().to_string(),
+            Some(file_description) => file_description.trim(),
             None => {
                 println!("Cannot find value key: file_description...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -118,7 +118,7 @@ impl SettlementSettings {
         };
 
         let settle_date = match settings.get("settle_date") {
-            Some(settle_date) => settle_date.trim().to_string(),
+            Some(settle_date) => settle_date.trim(),
             None => {
                 println!("Cannot find value key: settle_date...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -126,7 +126,7 @@ impl SettlementSettings {
         };
 
         let trace_bsb = match settings.get("trace_bsb") {
-            Some(trace_bsb) => trace_bsb.trim().to_string(),
+            Some(trace_bsb) => trace_bsb.trim(),
             None => {
                 println!("Cannot find value key: trace_bsb...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -134,7 +134,7 @@ impl SettlementSettings {
         };
 
         let trace_account_number = match settings.get("trace_account_number") {
-            Some(trace_account_number) => trace_account_number.trim().to_string(),
+            Some(trace_account_number) => trace_account_number.trim(),
             None => {
                 println!("Cannot find value key: trace_account_number...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -142,7 +142,7 @@ impl SettlementSettings {
         };
 
         let trace_account_name = match settings.get("trace_account_name") {
-            Some(trace_account_name) => trace_account_name.trim().to_string(),
+            Some(trace_account_name) => trace_account_name.trim(),
             None => {
                 println!("Cannot find value key: trace_account_name...most likely you have accidentally modified the key name, please fix the keyname or regenerate the template and try again");
                 exit(1)
@@ -150,19 +150,19 @@ impl SettlementSettings {
         };
 
         Self {
-            bank_name,
-            user_name,
-            apca_number,
-            file_description,
-            settle_date,
-            trace_bsb,
-            trace_account_number,
-            trace_account_name,
+            bank_name: bank_name.to_owned(),
+            user_name: user_name.to_owned(),
+            apca_number: apca_number.to_owned(),
+            file_description: file_description.to_owned(),
+            settle_date: settle_date.to_owned(),
+            trace_bsb: trace_bsb.to_owned(),
+            trace_account_number: trace_account_number.to_owned(),
+            trace_account_name: trace_account_name.to_owned(),
         }
     }
 
-    pub fn validate(&self) {
-        let mut res: Vec<String> = Vec::new();
+    pub async fn validate(&self) {
+        let mut res: Vec<&str> = Vec::new();
 
         let _ = validate_csv_bank_name(&self.bank_name, &mut res);
         let _ = validate_csv_user_name(&self.user_name, &mut res);
@@ -214,20 +214,19 @@ pub struct RecordFlatten {
 }
 
 impl RecordFlatten {
-    pub fn new(rec: &CsvRecord) -> Self {
+    pub async fn new(rec: &CsvRecord) -> Self {
         Self {
-            bsb: rec.bsb.trim().to_string(),
-            account_number: rec.account_number.trim().to_string(),
-            client_name: rec.client_name.trim().to_string(),
-            amount: normalise_amount(rec.amount.trim().trim_start_matches('$').to_string()),
-            comment: rec.comment.as_ref().unwrap().trim().to_string(),
+            bsb: rec.bsb.trim().to_owned(),
+            account_number: rec.account_number.trim().to_owned(),
+            client_name: rec.client_name.trim().to_owned(),
+            amount: normalise_amount(rec.amount.trim().trim_start_matches('$')),
+            comment: rec.comment.as_ref().unwrap().trim().to_owned(),
             tax_withhold: normalise_amount(
                 rec.tax_withhold
                     .as_ref()
                     .unwrap()
                     .trim()
-                    .trim_start_matches('$')
-                    .to_string(),
+                    .trim_start_matches('$'),
             ),
         }
     }
@@ -242,15 +241,15 @@ pub struct RecordWithConf {
 }
 
 impl RecordWithConf {
-    pub fn new(csv_rec: &CsvRecord, conf: SettlementSettings) -> Self {
+    pub async fn new(csv_rec: &CsvRecord, conf: SettlementSettings) -> Self {
         Self {
-            rec: RecordFlatten::new(csv_rec),
+            rec: RecordFlatten::new(csv_rec).await,
             conf,
         }
     }
 
-    pub fn validate(&self, line_count: &mut u32, err_count: &mut u32) {
-        let mut res: Vec<String> = Vec::new();
+    pub async fn validate(&self, line_count: &mut u32, err_count: &mut u32) {
+        let mut res: Vec<&str> = Vec::new();
 
         let _ = validate_bsb(&self.rec.bsb, &mut res, BsbType::DetailBsb);
         let _ = validate_account_number(&self.rec.account_number, &mut res, BsbType::DetailBsb);
@@ -277,7 +276,7 @@ pub struct TotalRecord {
 }
 
 impl TotalRecord {
-    pub fn new(line_count: String, total: String) -> Self {
+    pub async fn new(line_count: String, total: String) -> Self {
         Self {
             line_count: right_adjust(&line_count, 6, FillStrategy::Zero),
             total: right_adjust(&total, 10, FillStrategy::Zero),

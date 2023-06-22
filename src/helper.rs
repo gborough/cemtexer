@@ -1,6 +1,5 @@
 //! Helper structs to assist deserialising common data types
-use nom::bytes::complete::take;
-use nom::IResult;
+use nom::{bytes::complete::take, IResult};
 use rand::Rng;
 use std::fmt::Display;
 

@@ -1,14 +1,13 @@
 //! Command line options and associated functions
-use clap::{AppSettings, Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 
 /// Command line options
 #[derive(Parser)]
 #[clap(author = "Author: Geoffrey Borough<Geoffrey.Borough@outlook.com>")]
 #[clap(version)]
 #[clap(about = "Utility to convert CSV file to Cemtex ABA file and validate Cemtex ABA file format", long_about = None)]
-#[clap(global_setting(AppSettings::DeriveDisplayOrder))]
 pub struct Cli {
-    #[clap(subcommand, arg_enum)]
+    #[clap(subcommand)]
     pub command: Commands,
 }
 
@@ -18,10 +17,12 @@ pub struct Cli {
 pub enum Commands {
     #[clap(about = "Print template, try run:\n \"cemtexer showtemplate\"")]
     Showtemplate,
-    #[clap(about = "Generate template, try run:\n \"cemtexer gentemplate /path/to/template\"")]
+    #[clap(
+        about = "Generate template toml file, try run:\n \"cemtexer gentemplate /path/to/template\""
+    )]
     Gentemplate { path: String },
     #[clap(
-        about = "Generate Cemtex .aba file from .csv compliant file, try run:\n \"cemtexer abagen --template /path/to/template --csv /path/to/somecsv.csv --aba /home/user/output.aba\"\nType: cemtex abagen -h for all options"
+        about = "Generate Cemtex .aba file from .csv compliant file, try run:\n \"cemtexer abagen --template /path/to/template.toml --csv /path/to/somecsv.csv --aba /home/user/output.aba\"\nType: cemtex abagen -h for all options"
     )]
     Abagen {
         #[clap(flatten)]

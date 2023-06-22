@@ -1,6 +1,6 @@
 //! Descriptive block is always the first line of a valid .aba file
-use nom::bytes::complete::take;
-use nom::IResult;
+use lazy_static::lazy_static;
+use nom::{bytes::complete::take, IResult};
 use std::{fmt::Display, fmt::Write};
 
 use crate::csv::*;
@@ -8,12 +8,11 @@ use crate::errors::*;
 use crate::parser_utils::*;
 use crate::types::*;
 
-/// Fillers for fixed blank position 1
-const BLANK_1: &str = "                 ";
-/// Fillers for fixed blank position 2
-const BLANK_2: &str = "       ";
-/// Fillers for fixed blank position 3
-const BLANK_3: &str = "                                        ";
+lazy_static! {
+    static ref BLANK_1: String = " ".repeat(17);
+    static ref BLANK_2: String = " ".repeat(7);
+    static ref BLANK_3: String = " ".repeat(40);
+}
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub struct DescriptiveBlock {
@@ -43,27 +42,27 @@ impl DescriptiveBlock {
         let (i, blank_3) = take(40u8)(i)?;
 
         let descriptive = Self {
-            record_type: record_type.to_string(),
-            blank_1: blank_1.to_string(),
-            reel_seq: reel_seq.to_string(),
-            bank_name: bank_name.to_string(),
-            blank_2: blank_2.to_string(),
-            user_name: user_name.to_string(),
-            apca_number: apca_number.to_string(),
-            file_description: file_description.to_string(),
-            settle_date: settle_date.to_string(),
-            blank_3: blank_3.to_string(),
+            record_type: record_type.to_owned(),
+            blank_1: blank_1.to_owned(),
+            reel_seq: reel_seq.to_owned(),
+            bank_name: bank_name.to_owned(),
+            blank_2: blank_2.to_owned(),
+            user_name: user_name.to_owned(),
+            apca_number: apca_number.to_owned(),
+            file_description: file_description.to_owned(),
+            settle_date: settle_date.to_owned(),
+            blank_3: blank_3.to_owned(),
         };
 
         Ok((i, descriptive))
     }
 
-    pub fn validate(&self) -> Result<String, LineParseError> {
+    pub async fn validate(&self) -> Result<String, LineParseError> {
         let mut res: String = String::new();
 
         let _res = validate_generic_filler_str(
             self.record_type.clone(),
-            "0".to_string(),
+            "0".to_owned(),
             ValidationType::DescriptiveRecordTypeZero,
         )
         .map_err(|e| {
@@ -72,7 +71,7 @@ impl DescriptiveBlock {
 
         let _res = validate_generic_filler_str(
             self.blank_1.clone(),
-            BLANK_1.to_string(),
+            BLANK_1.to_owned(),
             ValidationType::DescriptiveBlankOne,
         )
         .map_err(|e| {
@@ -81,7 +80,7 @@ impl DescriptiveBlock {
 
         let _res = validate_generic_filler_str(
             self.reel_seq.clone(),
-            "01".to_string(),
+            "01".to_owned(),
             ValidationType::DescriptiveReelSequence,
         )
         .map_err(|e| {
@@ -95,7 +94,7 @@ impl DescriptiveBlock {
 
         let _res = validate_generic_filler_str(
             self.blank_2.clone(),
-            BLANK_2.to_string(),
+            BLANK_2.to_owned(),
             ValidationType::DescriptiveBlankTwo,
         )
         .map_err(|e| {
@@ -127,7 +126,7 @@ impl DescriptiveBlock {
 
         let _res = validate_generic_filler_str(
             self.blank_3.clone(),
-            BLANK_3.to_string(),
+            BLANK_3.to_owned(),
             ValidationType::DescriptiveBlankThree,
         )
         .map_err(|e| {
@@ -160,11 +159,11 @@ impl Display for DescriptiveBlock {
 impl From<SettlementSettings> for DescriptiveBlock {
     fn from(desc_settings: SettlementSettings) -> Self {
         Self {
-            record_type: "0".to_string(),
-            blank_1: BLANK_1.to_string(),
-            reel_seq: "01".to_string(),
+            record_type: "0".to_owned(),
+            blank_1: BLANK_1.to_owned(),
+            reel_seq: "01".to_owned(),
             bank_name: desc_settings.bank_name,
-            blank_2: BLANK_2.to_string(),
+            blank_2: BLANK_2.to_owned(),
             user_name: left_adjust(&desc_settings.user_name, 26usize, FillStrategy::Blank),
             apca_number: right_adjust(&desc_settings.apca_number, 6usize, FillStrategy::Zero),
             file_description: left_adjust(
@@ -173,7 +172,7 @@ impl From<SettlementSettings> for DescriptiveBlock {
                 FillStrategy::Blank,
             ),
             settle_date: desc_settings.settle_date,
-            blank_3: BLANK_3.to_string(),
+            blank_3: BLANK_3.to_owned(),
         }
     }
 }
@@ -182,5 +181,5 @@ impl From<SettlementSettings> for DescriptiveBlock {
 fn test_descriptive() {
     let desc: &str = "0                 01BQL       MY NAME                   1111111004231633  230410                                        ";
     let (_, result) = DescriptiveBlock::deserialise(&desc).unwrap();
-    assert_eq!(result.blank_3, BLANK_3.to_string())
+    assert_eq!(result.blank_3, *BLANK_3)
 }

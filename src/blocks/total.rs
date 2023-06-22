@@ -1,6 +1,6 @@
 //! Total block is always the last line of a valid .aba file
-use nom::bytes::complete::take;
-use nom::IResult;
+use lazy_static::lazy_static;
+use nom::{bytes::complete::take, IResult};
 use std::{fmt::Display, fmt::Write};
 
 use crate::csv::*;
@@ -8,12 +8,11 @@ use crate::errors::*;
 use crate::parser_utils::*;
 use crate::types::*;
 
-/// Fillers for fixed blank position 1
-const BLANK_1: &str = "            ";
-/// Fillers for fixed blank position 2
-const BLANK_2: &str = "                        ";
-/// Fillers for fixed blank position 3
-const BLANK_3: &str = "                                        ";
+lazy_static! {
+    static ref BLANK_1: String = " ".repeat(12);
+    static ref BLANK_2: String = " ".repeat(24);
+    static ref BLANK_3: String = " ".repeat(40);
+}
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub struct TotalBlock {
@@ -37,24 +36,24 @@ impl TotalBlock {
         let (i, blank_3) = take(40u8)(i)?;
 
         let total = Self {
-            record_type: record_type.to_string(),
-            bsb_filler: bsb_filler.to_string(),
-            blank_1: blank_1.to_string(),
-            total_field: total_field.to_string(),
-            blank_2: blank_2.to_string(),
-            record_count: record_count.to_string(),
-            blank_3: blank_3.to_string(),
+            record_type: record_type.to_owned(),
+            bsb_filler: bsb_filler.to_owned(),
+            blank_1: blank_1.to_owned(),
+            total_field: total_field.to_owned(),
+            blank_2: blank_2.to_owned(),
+            record_count: record_count.to_owned(),
+            blank_3: blank_3.to_owned(),
         };
 
         Ok((i, total))
     }
 
-    pub fn validate(&self, line_count: &u32) -> Result<String, LineParseError> {
+    pub async fn validate(&self, line_count: &u32) -> Result<String, LineParseError> {
         let mut res: String = String::new();
 
         let _res = validate_generic_filler_str(
             self.record_type.clone(),
-            "7".to_string(),
+            "7".to_owned(),
             ValidationType::TotalTypeSeven,
         )
         .map_err(|e| {
@@ -63,7 +62,7 @@ impl TotalBlock {
 
         let _res = validate_generic_filler_str(
             self.bsb_filler.clone(),
-            "999-999".to_string(),
+            "999-999".to_owned(),
             ValidationType::TotalBsbFiller,
         )
         .map_err(|e| {
@@ -72,7 +71,7 @@ impl TotalBlock {
 
         let _res = validate_generic_filler_str(
             self.blank_1.clone(),
-            BLANK_1.to_string(),
+            BLANK_1.to_owned(),
             ValidationType::TotalBlankOne,
         )
         .map_err(|e| {
@@ -96,7 +95,7 @@ impl TotalBlock {
 
         let _res = validate_generic_filler_str(
             self.blank_2.clone(),
-            BLANK_2.to_string(),
+            BLANK_2.to_owned(),
             ValidationType::TotalBlankTwo,
         )
         .map_err(|e| {
@@ -109,7 +108,7 @@ impl TotalBlock {
 
         let _res = validate_generic_filler_str(
             self.blank_3.clone(),
-            BLANK_3.to_string(),
+            BLANK_3.to_owned(),
             ValidationType::TotalBlankThree,
         )
         .map_err(|e| {
@@ -139,13 +138,13 @@ impl Display for TotalBlock {
 impl From<TotalRecord> for TotalBlock {
     fn from(tr: TotalRecord) -> Self {
         Self {
-            record_type: "7".to_string(),
-            bsb_filler: "999-999".to_string(),
-            blank_1: BLANK_1.to_string(),
+            record_type: "7".to_owned(),
+            bsb_filler: "999-999".to_owned(),
+            blank_1: BLANK_1.to_owned(),
             total_field: format!("{}{}0000000000", tr.total, tr.total),
-            blank_2: BLANK_2.to_string(),
+            blank_2: BLANK_2.to_owned(),
             record_count: tr.line_count,
-            blank_3: BLANK_3.to_string(),
+            blank_3: BLANK_3.to_owned(),
         }
     }
 }
