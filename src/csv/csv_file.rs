@@ -70,16 +70,16 @@ pub struct SettlementSettings {
 
 impl SettlementSettings {
     pub async fn new(path: impl AsRef<Path> + AsRef<OsStr>) -> Self {
-        let settings =  Config::builder()
+        let settings = match Config::builder()
             .add_source(ConfFile::from(Path::new(&path)))
-            .build().unwrap();
-        // {
-        //     Ok(settings) => settings,
-        //     Err(_) => {
-        //         println!("Unable to open the settings file. Program Aborted");
-        //         exit(1);
-        //     }
-        // };
+            .build()
+        {
+            Ok(settings) => settings,
+            Err(_) => {
+                println!("Unable to open the settings file. Program Aborted");
+                exit(1);
+            }
+        };
 
         let settings = settings
             .try_deserialize::<HashMap<String, String>>()
