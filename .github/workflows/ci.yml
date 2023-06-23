@@ -37,11 +37,6 @@ jobs:
         run: cargo build --release
 
       - name: Publish Artifact
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        uses: ncipollo/release-action@v1
         with:
-          name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          generate_release_notes: false
-          files: target/release/cemtexer
+          artifacts: target/release/cemtexer
