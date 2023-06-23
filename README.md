@@ -33,7 +33,7 @@ UI in the upcoming releases.
 ## How to Use
 
 Download the latest release from:
-https://github.com/gborough/cemtexer/releases/download/v0.1.3/cemtexer
+https://github.com/gborough/cemtexer/releases/
 
 The command line interface currently features four functions, type cemtexer -h
 for command line options

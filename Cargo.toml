@@ -1,6 +1,6 @@
 [package]
 name = "cemtexer"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 authors = ["Geoffrey Borough <geoffrey.borough@outlook.com>"]
 readme = "README.md"
