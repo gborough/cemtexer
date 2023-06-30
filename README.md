@@ -21,10 +21,12 @@ unique covenant regarding performance and memory safety.
 of Cemtex file in a scripted fashion and targets individual with an easy to use
 UI in the upcoming releases.
 
-[![CircleCI](https://circleci.com/gh/gborough/cemtexer/tree/main.svg?style=svg)](https://circleci.com/gh/gborough/cemtexer/tree/main)
+[![Build Status][actions-badge]][actions-url]
 [![Crates.io][crates-badge]][crates-url]
 [![MIT licensed][mit-badge]][mit-url]
 
+[actions-badge]: https://github.com/gborough/cemtexer/actions/workflows/ci.yml/badge.svg?branch=main
+[actions-url]: https://github.com/gborough/cemtexer/actions
 [crates-badge]: https://img.shields.io/crates/v/cemtexer.svg
 [crates-url]: https://crates.io/crates/cemtexer
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
